@@ -37,6 +37,7 @@
 */
 
 #include "MP6550_driver.hpp"
+#include <Arduino.h>
 
 motor::motor(int IN1pin, int IN2pin, int SLPpin){
 	
@@ -84,6 +85,8 @@ void motor::brake(){
 		digitalWrite(IN2, HIGH);
 	}
 	delay(100);
+	digitalWrite(IN1, LOW);
+	digitalWrite(IN2, LOW);
 	dir_ = 0;
 }
 
@@ -131,10 +134,10 @@ void motor::sleep(int secs){
 	wakeUp();
 }
 
-/*void wakeUp(){
+void motor::wakeUp(){
 	digitalWrite(SLP, LOW);
 	standby_ = 0;
-}*/
+}
 	
 motor::~motor(){
 	brake();
