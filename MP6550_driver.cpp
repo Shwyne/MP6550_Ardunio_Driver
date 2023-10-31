@@ -1,39 +1,5 @@
 /* 
 		Library for MP6550 DC-Motordriver
-				Last updated: 29.10.2023
-					created by: Timo Steinhilber
-				last modified by: Timo Steinhilber
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-1. Setup:
-	
-	-Initalize: 
-	-Deconstruction:
-	-CurrentSensing:
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-2. Attributes:
-	
-	-Speed: 
-	-Break Speed:
-	-Direction:
-	-Standby:
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-3. Methods:
-
-	-forwards():
-	-backwards():
-	-brake():
-	-setBrakeSpeed(int br_speed):
-	-toggleDir();
-	-setSpeed(int speed):
-	-getSpeed();
-	-getStbyStat():
-	-sleep()/sleep(int secs):
-	-wakeUp:
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
 #include "MP6550_driver.hpp"
@@ -41,7 +7,7 @@
 
 motor::motor(int IN1pin, int IN2pin, int SLPpin){
 	
- IN1 = IN1pin;
+ 	IN1 = IN1pin;
 	IN2 = IN2pin;
 	SLP = SLPpin;
 	
@@ -54,21 +20,31 @@ motor::motor(int IN1pin, int IN2pin, int SLPpin){
 	digitalWrite(SLP, HIGH);
 	speed_ = 0;
 	dir_ = 0;
-	standby_ = 1;
+	br_speed_ = 255;
 }
 
 void motor::forwards(){
-	if(standby_ == 1)wakeUp();
+	if(digitalRead(SLP) == 1)wakeUp();
 	digitalWrite(IN1, HIGH);
 	analogWrite(IN2, speed_);
 	dir_	=  1;
 }
 
+void motor::forwards(int speed){
+	setSpeed(speed);
+	forwards();
+}
+
 void motor::backwards(){
-	if(standby_ == 1)wakeUp();
+	if(digitalRead(SLP) == 1)wakeUp();
 	digitalWrite(IN2, HIGH);
 	analogWrite(IN1, speed_);
 	dir_ = -1;
+}
+
+void motor::backwards(int speed){
+	setSpeed(speed);
+	backwards();
 }
 
 void motor::brake(){
@@ -88,6 +64,11 @@ void motor::brake(){
 	digitalWrite(IN1, LOW);
 	digitalWrite(IN2, LOW);
 	dir_ = 0;
+}
+
+void motor::brake(int br_speed){
+	setBrakeSpeed(br_speed);
+	brake();
 }
 
 void motor::setBrakeSpeed(int br_speed){
@@ -116,27 +97,28 @@ int motor::getSpeed(){
 	return 255-speed_;
 }
 
+int motor::getBrakeSpeed(){
+	return br_speed_;
+}
+
 int motor::getStbyStat(){
-	return standby_;
+	return digitalRead(SLP);
 }
 
 void motor::sleep(){
 	brake();
 	digitalWrite(SLP,HIGH);
-	standby_ = 1;
 }
 
 void motor::sleep(int secs){
 	brake();
 	digitalWrite(SLP, HIGH);
-	standby_ = 1;
 	delay(secs*1000);
 	wakeUp();
 }
 
 void motor::wakeUp(){
 	digitalWrite(SLP, LOW);
-	standby_ = 0;
 }
 	
 motor::~motor(){
