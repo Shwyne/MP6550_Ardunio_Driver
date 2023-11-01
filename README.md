@@ -4,7 +4,8 @@ _Library for Arduino MP6650 DC-Motor driver_
 ## 1. Setup:
 	
 **1. Move "MP6550_driver.cpp" and "MP6550_driver.hpp" to your project folder:** <br />
-	a) If you're using Arduino IDE -> folder where your .ino is located. IMPORTANT: delete the line #include "Ardunio.h" at the beginning of "MP6550_driver.cpp" <br />
+	a) If you're using Arduino IDE -> folder where your .ino is located. <br />
+ 	   IMPORTANT: delete the line #include "Ardunio.h" at the beginning of "MP6550_driver.cpp" <br />
 	b) If you're using VSCode+Platform.io -> create folder inside /lib folder named after the library (i.e. "MP6550_driver") <br />
 
 **2. Include the library into your main file:** <br />
