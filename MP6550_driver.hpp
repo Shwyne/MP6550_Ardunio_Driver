@@ -6,6 +6,7 @@ class motor{
 		int speed_;		  //Integer for pwm-speed (255 = 0 speed | 0 = max Speed)
 		int br_speed_;	//Integer for Brake_speed (255 = max Brake | 0 = No Break)
 		int dir_;				//Integer for Direction (-1 = backwards | 0 = idle | 1 = forwards)
+		int sleep_;
 		int IN1;				//Pin connected to IN1
 		int IN2;				//Pin connected to IN2
 		int SLP;			   //Pin connected to SLP
