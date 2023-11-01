@@ -21,10 +21,10 @@ motor::motor(int IN1pin, int IN2pin, int SLPpin){
 	speed_ = 0;
 	dir_ = 0;
 	br_speed_ = 255;
+	sleep_ = 0;
 }
 
 void motor::forwards(){
-	if(digitalRead(SLP) == 1)wakeUp();
 	digitalWrite(IN1, HIGH);
 	analogWrite(IN2, speed_);
 	dir_	=  1;
@@ -36,7 +36,6 @@ void motor::forwards(int speed){
 }
 
 void motor::backwards(){
-	if(digitalRead(SLP) == 1)wakeUp();
 	digitalWrite(IN2, HIGH);
 	analogWrite(IN1, speed_);
 	dir_ = -1;
@@ -79,7 +78,7 @@ void motor::setBrakeSpeed(int br_speed){
 }
 
 void motor::toggleDir(){
-	if(standby_ ==	0){
+	if(sleep_ == 0){
 		if(dir_ == 1) backwards();
 		else if(dir_ == -1) forwards();
 		else brake();
@@ -102,27 +101,28 @@ int motor::getBrakeSpeed(){
 }
 
 int motor::getStbyStat(){
-	return digitalRead(SLP);
+	return sleep_;
 }
 
 void motor::sleep(){
 	brake();
-	digitalWrite(SLP,HIGH);
+	digitalWrite(SLP,LOW);
+	sleep_ = 1;
 }
 
 void motor::sleep(int secs){
-	brake();
-	digitalWrite(SLP, HIGH);
+	sleep();
 	delay(secs*1000);
 	wakeUp();
 }
 
 void motor::wakeUp(){
-	digitalWrite(SLP, LOW);
+	digitalWrite(SLP, HIGH);
+	sleep_ = 0;
 }
 	
 motor::~motor(){
 	brake();
 	delay(500);
-	digitalWrite(SLP, HIGH);
+	digitalWrite(SLP, LOW);
 }
